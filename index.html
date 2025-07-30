@@ -3,171 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codemingo Web Presentation</title>
+    <title>Codemingo Onboarding</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap');
-        
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #f97316;
-            --dark: #1e293b;
-            --light: #f8fafc;
-        }
-        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark);
-            color: var(--light);
-            overflow: hidden;
-        }
-        
-        .code-font {
-            font-family: 'Fira Code', monospace;
-        }
-        
-        .slide-container {
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            position: relative;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         
         .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            min-height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 2rem;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: transform 0.8s ease, opacity 0.8s ease;
-        }
-        
-        .slide.active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .slide.prev {
-            opacity: 0;
-            transform: translateX(-100%);
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        }
-        
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-        
-        .nav-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .prev-btn {
-            left: 20px;
-        }
-        
-        .next-btn {
-            right: 20px;
         }
         
         .progress-bar {
-            position: absolute;
-            bottom: 20px;
+            position: fixed;
+            bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 8px;
-            z-index: 100;
+            gap: 0.5rem;
+            z-index: 50;
         }
         
         .progress-dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
         }
         
         .progress-dot.active {
             background-color: white;
-            transform: scale(1.2);
+            transform: scale(1.3);
         }
         
-        .bullet-point {
+        .nav-arrows {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
             display: flex;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
+            gap: 1rem;
+            z-index: 50;
+        }
+        
+        .nav-arrow {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-arrow:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .slide-transition {
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        
-        .bullet-point.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .bullet-icon {
-            color: var(--secondary);
-            margin-right: 0.75rem;
-            margin-top: 0.25rem;
-        }
-        
-        .code-block {
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            font-family: 'Fira Code', monospace;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .code-block::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background-color: var(--secondary);
-        }
-        
-        .highlight {
-            color: var(--secondary);
-            font-weight: 600;
-        }
-        
-        .slide-number {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            font-size: 0.875rem;
-            opacity: 0.7;
         }
         
         @keyframes fadeIn {
@@ -175,574 +93,840 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .animate-in {
-            animation: fadeIn 0.8s forwards;
+        .track-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
         
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-        .delay-4 { animation-delay: 0.8s; }
-        
-        /* Mobile text animation */
-        @keyframes typewriter {
-            from { width: 0; }
-            to { width: 100%; }
+        .track-card:hover {
+            transform: translateY(-5px);
+            border-color: #3B82F6;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1), 0 10px 10px -5px rgba(59, 130, 246, 0.04);
         }
         
-        .typewriter {
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 3px solid var(--secondary);
-            animation: typewriter 3s steps(40) forwards, 
-                       blink-caret 0.75s step-end infinite;
-        }
-        
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: var(--secondary); }
+        .flow-arrow {
+            position: absolute;
+            top: 50%;
+            right: -1rem;
+            transform: translateY(-50%);
+            color: #3B82F6;
+            font-size: 24px;
+            z-index: 10;
         }
         
         @media (max-width: 768px) {
-            .slide {
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 1.75rem !important;
-            }
-            
-            h2 {
-                font-size: 1.25rem !important;
-            }
-            
-            .nav-btn {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .mobile-typewriter {
-                display: block;
-            }
-            
-            .desktop-content {
+            .flow-arrow {
                 display: none;
             }
         }
         
-        @media (min-width: 769px) {
-            .mobile-typewriter {
-                display: none;
-            }
-            
-            .desktop-content {
-                display: block;
-            }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+        
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .check-icon {
+            flex-shrink: 0;
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
         }
     </style>
 </head>
-<body>
-    <div class="slide-container">
-        <!-- Slide 1: Welcome to Codemingo -->
-        <div class="slide active" id="slide-1">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Welcome</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Welcome to <span class="text-indigo-400">Codemingo</span></h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">Learn. Build. Grow. Launch.</h2>
-                    
-                    <!-- Desktop content -->
-                    <div class="desktop-content bg-black/20 p-6 rounded-lg border border-indigo-500/20 animate-in delay-3">
-                        <p class="text-lg mb-4">Codemingo is a professional developer community and course platform built for those who want more than just tutorials.</p>
-                        <p class="text-lg">Whether you're learning, building, or shipping — Codemingo is your place to grow.</p>
+<body class="bg-gray-50 text-gray-900">
+    <div id="slides-container" class="relative">
+        <!-- Slide 1: Welcome -->
+        <section id="slide-1" class="slide bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+            <div class="blob bg-blue-400 w-96 h-96 top-0 right-0 opacity-20"></div>
+            <div class="blob bg-indigo-500 w-80 h-80 bottom-0 left-0 opacity-20"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-3xl mx-auto text-center">
+                    <div class="mb-8 fade-in" style="animation-delay: 0.2s;">
+                        <svg class="w-20 h-20 mx-auto mb-6 text-blue-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        <h1 class="text-5xl md:text-7xl font-bold mb-6">Welcome to Codemingo</h1>
+                        <p class="text-xl md:text-2xl text-blue-100 mb-12">A community to Learn, Build, Grow, and Launch</p>
                     </div>
                     
-                    <!-- Mobile animated text -->
-                    <div class="mobile-typewriter mt-6">
-                        <p class="typewriter text-lg">Codemingo is where developers grow.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="animation-delay: 0.6s;">
+                        <a href="#" class="px-8 py-4 bg-white text-blue-700 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-lg">
+                            Join Discord
+                        </a>
+                        <a href="#" class="px-8 py-4 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors border border-blue-500">
+                            Explore Starter Challenges
+                        </a>
                     </div>
-                </div>
-                <div class="code-block mt-8 animate-in delay-4">
-                    <code>
-                        <span class="text-blue-400">const</span> <span class="text-green-400">codemingo</span> = <span class="text-purple-400">new</span> <span class="text-yellow-400">DevCommunity</span>({<br>
-                        &nbsp;&nbsp;<span class="text-orange-400">focus</span>: <span class="text-green-400">'tech & development'</span>,<br>
-                        &nbsp;&nbsp;<span class="text-orange-400">mission</span>: <span class="text-green-400">'learn, build, grow, launch'</span><br>
-                        });
-                    </code>
-                </div>
-            </div>
-            <div class="slide-number">1/10</div>
-        </div>
-
-        <!-- Slide 2: Our Vision -->
-        <div class="slide" id="slide-2">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Our Vision</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Our Vision</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">A structured tech ecosystem.</h2>
                     
-                    <div class="space-y-4 mt-8">
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-check-circle"></i></div>
-                            <div>Focused only on tech & development</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-check-circle"></i></div>
-                            <div>Built for learners, builders, and creators</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-check-circle"></i></div>
-                            <div>Combining community, open source, and ownership</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-check-circle"></i></div>
-                            <div>Helping devs move from learners → creators → founders</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gradient-to-r from-indigo-600/30 to-purple-600/30 p-6 rounded-lg border border-indigo-500/20 mt-8 animate-in delay-4">
-                    <p class="text-lg italic">"We're building the platform we wish existed when we started coding."</p>
-                </div>
-            </div>
-            <div class="slide-number">2/10</div>
-        </div>
-
-        <!-- Slide 3: What Makes Codemingo Different -->
-        <div class="slide" id="slide-3">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Our Difference</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">What Makes Codemingo Different</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">Not just another Discord or course site.</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                        <div class="bg-black/20 p-5 rounded-lg border border-indigo-500/20 animate-in delay-3">
-                            <div class="text-indigo-400 text-xl mb-2"><i class="fas fa-code mr-2"></i> Tech-only platform</div>
-                            <p>Focused exclusively on development and technical skills.</p>
-                        </div>
-                        <div class="bg-black/20 p-5 rounded-lg border border-indigo-500/20 animate-in delay-3">
-                            <div class="text-indigo-400 text-xl mb-2"><i class="fas fa-users mr-2"></i> Community-built projects</div>
-                            <p>Collaborate on real projects with other developers.</p>
-                        </div>
-                        <div class="bg-black/20 p-5 rounded-lg border border-indigo-500/20 animate-in delay-4">
-                            <div class="text-indigo-400 text-xl mb-2"><i class="fas fa-dollar-sign mr-2"></i> Monetized open-source</div>
-                            <p>Create and earn from your open-source contributions.</p>
-                        </div>
-                        <div class="bg-black/20 p-5 rounded-lg border border-indigo-500/20 animate-in delay-4">
-                            <div class="text-indigo-400 text-xl mb-2"><i class="fas fa-rocket mr-2"></i> Launch-ready portfolio</div>
-                            <p>Build work that's ready to showcase to employers.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-black/20 p-5 rounded-lg border border-indigo-500/20 animate-in delay-4 mt-4">
-                    <div class="text-indigo-400 text-xl mb-2"><i class="fas fa-shield-alt mr-2"></i> True ownership and transparency</div>
-                    <p>Your work remains yours, with clear attribution and fair rewards.</p>
-                </div>
-            </div>
-            <div class="slide-number">3/10</div>
-        </div>
-
-        <!-- Slide 4: Learn with Real Resources -->
-        <div class="slide" id="slide-4">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Learning Resources</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Learn with Real Resources</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">More than content — real practice.</h2>
-                    
-                    <div class="space-y-4 mt-8">
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-code-branch"></i></div>
-                            <div>Beginner-friendly starter projects</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fab fa-github"></i></div>
-                            <div>Git + GitHub practice repos</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-puzzle-piece"></i></div>
-                            <div>Dev challenges (mini + full-scale)</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-comments"></i></div>
-                            <div>Peer feedback + mentorship inside Discord</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="code-block mt-8 animate-in delay-4">
-                    <code>
-                        <span class="text-blue-400">function</span> <span class="text-green-400">learnByDoing</span>() {<br>
-                        &nbsp;&nbsp;<span class="text-blue-400">const</span> <span class="text-green-400">skills</span> = [];<br>
-                        &nbsp;&nbsp;<span class="text-purple-400">while</span> (<span class="text-green-400">practicing</span>) {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-green-400">skills</span>.<span class="text-yellow-400">push</span>(<span class="text-green-400">newKnowledge</span>);<br>
-                        &nbsp;&nbsp;}<br>
-                        &nbsp;&nbsp;<span class="text-purple-400">return</span> <span class="text-green-400">skills</span>;<br>
-                        }
-                    </code>
-                </div>
-            </div>
-            <div class="slide-number">4/10</div>
-        </div>
-
-        <!-- Slide 5: Build with the Community -->
-        <div class="slide" id="slide-5">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Community Building</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Build with the Community</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">Collaborative projects, not solo tutorials.</h2>
-                    
-                    <div class="space-y-4 mt-8">
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fab fa-github"></i></div>
-                            <div>Open-source repos built in public</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-users-cog"></i></div>
-                            <div>Group challenges and community apps</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-cubes"></i></div>
-                            <div>Shared components, API kits, CLI tools</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-rocket"></i></div>
-                            <div>Work that turns into real products — not just practice</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-gradient-to-r from-purple-600/30 to-blue-600/30 p-6 rounded-lg border border-purple-500/20 mt-8 animate-in delay-4">
-                    <div class="flex items-center">
-                        <div class="text-4xl mr-4"><i class="fas fa-users"></i></div>
-                        <p class="text-lg">"Building together creates better products and better developers."</p>
+                    <div class="mt-16 fade-in" style="animation-delay: 1s;">
+                        <p class="text-blue-200">Scroll or use arrows to navigate</p>
+                        <svg class="w-6 h-6 mx-auto mt-2 animate-bounce text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
                     </div>
                 </div>
             </div>
-            <div class="slide-number">5/10</div>
-        </div>
+        </section>
 
-        <!-- Slide 6: Launch What You Build -->
-        <div class="slide" id="slide-6">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Shipping Products</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Launch What You Build</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">We don't just learn — we ship.</h2>
+        <!-- Slide 2: Why Codemingo -->
+        <section id="slide-2" class="slide bg-white">
+            <div class="blob bg-blue-100 w-96 h-96 bottom-0 right-0"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8 text-blue-800">Why Codemingo?</h2>
                     
-                    <div class="space-y-4 mt-8">
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-ship"></i></div>
-                            <div>Showcase launches in #ship-it</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div>
+                            <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                                Codemingo is where tech learners become tech builders. A vibrant community for developers, designers, and creators to learn, build, grow, and launch together.
+                            </p>
+                            <p class="text-xl text-gray-700 leading-relaxed">
+                                Whether you're just starting or already building, Codemingo is where collaboration meets progress.
+                            </p>
                         </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-tools"></i></div>
-                            <div>Launch tools, websites, templates, SaaS products</div>
+                        
+                        <div class="space-y-6">
+                            <div class="check-item">
+                                <div class="check-icon">
+                                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800">No fluff, no noise — just real growth</h3>
+                                </div>
+                            </div>
+                            
+                            <div class="check-item">
+                                <div class="check-icon">
+                                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Build meaningful projects with others</h3>
+                                </div>
+                            </div>
+                            
+                            <div class="check-item">
+                                <div class="check-icon">
+                                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Get support, mentorship, and open-source experience</h3>
+                                </div>
+                            </div>
+                            
+                            <div class="check-item">
+                                <div class="check-icon">
+                                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Launch what you create, together</h3>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-users"></i></div>
-                            <div>Launch as a team, with shared credit and reward</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-graduation-cap"></i></div>
-                            <div>Learn how to build, scale, and deploy as a group</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-gradient-to-r from-orange-600/30 to-red-600/30 p-6 rounded-lg border border-orange-500/20 mt-8 animate-in delay-4">
-                    <div class="flex items-center">
-                        <div class="text-4xl mr-4"><i class="fas fa-rocket"></i></div>
-                        <p class="text-lg">"From code to customers — we help you complete the journey."</p>
                     </div>
                 </div>
             </div>
-            <div class="slide-number">6/10</div>
-        </div>
+        </section>
 
-        <!-- Slide 7: Create & Earn -->
-        <div class="slide" id="slide-7">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Creator Economy</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Create & Earn</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">For creators who want to teach and lead.</h2>
+        <!-- Slide 3: What We Offer -->
+        <section id="slide-3" class="slide bg-gray-50">
+            <div class="blob bg-blue-200 w-80 h-80 top-20 left-20"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-12 text-blue-800">What We Offer</h2>
                     
-                    <div class="space-y-4 mt-8">
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                            <div>Create your own tech courses (soon)</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-store"></i></div>
-                            <div>Sell your content on a tech-only platform</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-user-circle"></i></div>
-                            <div>Build your personal brand through value</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-dollar-sign"></i></div>
-                            <div>Get paid for teaching real dev skills</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-black/30 p-4 rounded-lg border border-yellow-500/30 mt-6 animate-in delay-4">
-                    <div class="flex items-center">
-                        <div class="text-yellow-400 text-2xl mr-3"><i class="fas fa-lightbulb"></i></div>
-                        <p>Coming soon — by invite only during prelaunch</p>
-                    </div>
-                </div>
-            </div>
-            <div class="slide-number">7/10</div>
-        </div>
-
-        <!-- Slide 8: GitHub + Discord + Web -->
-        <div class="slide" id="slide-8">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Infrastructure</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">GitHub + Discord + Web</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">Our infrastructure is open and live.</h2>
-                    
-                    <div class="space-y-4 mt-8">
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fab fa-github"></i></div>
-                            <div>GitHub: Open-source projects under @codemingo</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fab fa-discord"></i></div>
-                            <div>Discord: Where collaboration and feedback happens</div>
-                        </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-globe"></i></div>
-                            <div>Codemingo.dev (coming): Launchpad for courses, products, and showcases</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="code-block mt-8 animate-in delay-4">
-                    <code>
-                        <span class="text-blue-400">const</span> <span class="text-green-400">infrastructure</span> = {<br>
-                        &nbsp;&nbsp;<span class="text-orange-400">code</span>: <span class="text-green-400">'github.com/codemingo'</span>,<br>
-                        &nbsp;&nbsp;<span class="text-orange-400">community</span>: <span class="text-green-400">'discord.gg/codemingo'</span>,<br>
-                        &nbsp;&nbsp;<span class="text-orange-400">platform</span>: <span class="text-green-400">'codemingo.dev'</span> <span class="text-gray-400">// coming soon</span><br>
-                        };
-                    </code>
-                </div>
-            </div>
-            <div class="slide-number">8/10</div>
-        </div>
-
-        <!-- Slide 9: Founding Members -->
-        <div class="slide" id="slide-9">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Community</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Founding Members</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">Built with our early testers.</h2>
-                    
-                    <div class="bg-black/20 p-6 rounded-lg border border-indigo-500/20 mt-8 animate-in delay-3">
-                        <div class="flex items-start">
-                            <div class="text-green-400 text-3xl mr-4"><i class="fas fa-seedling"></i></div>
+                    <div class="space-y-6">
+                        <div class="check-item">
+                            <div class="check-icon">
+                                <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
                             <div>
-                                <p class="text-lg mb-4">Our Founding Members helped shape Codemingo before launch — giving feedback, testing features, and guiding the vision.</p>
-                                <p class="text-lg font-medium text-indigo-300">You're early. That means everything.</p>
+                                <h3 class="text-xl font-semibold text-gray-800">Tech-focused learning & community</h3>
+                                <p class="text-gray-600 mt-1">A dedicated space for practical skills and real-world applications</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                        <div class="bg-black/30 p-4 rounded-lg border border-indigo-500/20 text-center animate-in delay-4">
-                            <div class="w-16 h-16 bg-indigo-600/30 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-user text-2xl"></i>
+                        
+                        <div class="check-item">
+                            <div class="check-icon">
+                                <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
                             </div>
-                            <div class="text-sm opacity-80">Founding Member</div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Hands-on projects, not just theory</h3>
+                                <p class="text-gray-600 mt-1">Build real applications that solve actual problems</p>
+                            </div>
                         </div>
-                        <div class="bg-black/30 p-4 rounded-lg border border-indigo-500/20 text-center animate-in delay-4">
-                            <div class="w-16 h-16 bg-indigo-600/30 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-user text-2xl"></i>
+                        
+                        <div class="check-item">
+                            <div class="check-icon">
+                                <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
                             </div>
-                            <div class="text-sm opacity-80">Founding Member</div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Open-source collaboration</h3>
+                                <p class="text-gray-600 mt-1">Contribute to open-source projects and build your portfolio</p>
+                            </div>
                         </div>
-                        <div class="bg-black/30 p-4 rounded-lg border border-indigo-500/20 text-center animate-in delay-4">
-                            <div class="w-16 h-16 bg-indigo-600/30 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-user text-2xl"></i>
+                        
+                        <div class="check-item">
+                            <div class="check-icon">
+                                <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
                             </div>
-                            <div class="text-sm opacity-80">Founding Member</div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">A place to showcase your skills and ship real work</h3>
+                                <p class="text-gray-600 mt-1">Demonstrate your abilities and get recognition</p>
+                            </div>
                         </div>
-                        <div class="bg-black/30 p-4 rounded-lg border border-indigo-500/20 text-center animate-in delay-4">
-                            <div class="w-16 h-16 bg-indigo-600/30 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <i class="fas fa-user-plus text-2xl"></i>
+                        
+                        <div class="check-item">
+                            <div class="check-icon">
+                                <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
                             </div>
-                            <div class="text-sm opacity-80">You?</div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">Opportunities to grow your portfolio and network</h3>
+                                <p class="text-gray-600 mt-1">Connect with like-minded developers and expand your professional circle</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="slide-number">9/10</div>
-        </div>
+        </section>
 
-        <!-- Slide 10: Join Us -->
-        <div class="slide" id="slide-10">
-            <div class="max-w-4xl mx-auto w-full">
-                <div class="mb-8">
-                    <div class="code-font text-sm text-secondary mb-2 opacity-80 animate-in">// Call to Action</div>
-                    <h1 class="text-5xl font-bold mb-4 animate-in delay-1">Join Us</h1>
-                    <h2 class="text-2xl font-medium text-indigo-300 mb-6 animate-in delay-2">Ready to be part of something real?</h2>
+        <!-- Slide 4: Onboarding Process -->
+        <section id="slide-4" class="slide bg-white">
+            <div class="blob bg-indigo-100 w-96 h-96 bottom-0 left-0"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-12 text-blue-800">Our Onboarding Process</h2>
                     
-                    <div class="space-y-4 mt-8">
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fab fa-discord"></i></div>
-                            <div>Join the Codemingo Discord</div>
+                    <div class="space-y-8">
+                        <div class="flex flex-col md:flex-row items-start gap-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">1</div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold mb-2">Join the Discord server</h3>
+                                <p class="text-gray-600 text-lg">Connect with our community and introduce yourself</p>
+                            </div>
                         </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fab fa-github"></i></div>
-                            <div>Explore our GitHub projects</div>
+                        
+                        <div class="flex flex-col md:flex-row items-start gap-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">2</div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold mb-2">Visit #start-here for first steps</h3>
+                                <p class="text-gray-600 text-lg">Read the welcome guide and get oriented</p>
+                            </div>
                         </div>
-                        <div class="bullet-point">
-                            <div class="bullet-icon"><i class="fas fa-hammer"></i></div>
-                            <div>Become a builder, not just a learner</div>
+                        
+                        <div class="flex flex-col md:flex-row items-start gap-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">3</div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold mb-2">Accept the rules and select your role</h3>
+                                <p class="text-gray-600 text-lg">Choose your area of interest: Frontend, Backend, UI/UX Design, or Open Source</p>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="mt-10 animate-in delay-4">
-                        <p class="text-xl mb-6">Let's learn, build, grow, and launch — together.</p>
-                        <div class="flex flex-wrap gap-4">
-                            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center">
-                                <i class="fab fa-discord mr-2"></i> Join Discord
-                            </button>
-                            <button class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center">
-                                <i class="fab fa-github mr-2"></i> GitHub
-                            </button>
-                            <button class="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center">
-                                <i class="fas fa-envelope mr-2"></i> Get Updates
-                            </button>
+                        
+                        <div class="flex flex-col md:flex-row items-start gap-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">4</div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold mb-2">Complete a simple Starter Challenge</h3>
+                                <p class="text-gray-600 text-lg">Build a small project to demonstrate your skills and commitment</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row items-start gap-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">5</div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold mb-2">Submit it to unlock full access</h3>
+                                <p class="text-gray-600 text-lg">Share your work in the #submit-task channel</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row items-start gap-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">6</div>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold mb-2">Start collaborating in real builds</h3>
+                                <p class="text-gray-600 text-lg">Join project teams and contribute to ongoing work</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="slide-number">10/10</div>
+        </section>
+
+        <!-- Slide 5: Tracks & Roles -->
+        <section id="slide-5" class="slide bg-gray-50">
+            <div class="blob bg-blue-100 w-80 h-80 top-20 right-20"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8 text-blue-800">Roles You Can Choose</h2>
+                    <p class="text-xl text-gray-700 mb-12">You'll get access based on what you're learning and where you want to grow.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="track-card bg-white p-6 rounded-xl shadow-sm">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 text-blue-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">Frontend Developer</h3>
+                            <p class="text-gray-600 mb-4">Build beautiful user interfaces and interactive experiences.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">React</span>
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Vue</span>
+                                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">CSS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="track-card bg-white p-6 rounded-xl shadow-sm">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 text-green-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">Backend Developer</h3>
+                            <p class="text-gray-600 mb-4">Create robust server-side applications and APIs.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Node.js</span>
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Python</span>
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">APIs</span>
+                            </div>
+                        </div>
+                        
+                        <div class="track-card bg-white p-6 rounded-xl shadow-sm">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4 text-purple-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">UI/UX Designer</h3>
+                            <p class="text-gray-600 mb-4">Design intuitive user interfaces and experiences.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">Figma</span>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">Wireframing</span>
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">UX</span>
+                            </div>
+                        </div>
+                        
+                        <div class="track-card bg-white p-6 rounded-xl shadow-sm">
+                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4 text-yellow-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">Beginner Builder</h3>
+                            <p class="text-gray-600 mb-4">Just starting your tech journey? Learn the fundamentals.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">HTML</span>
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">CSS</span>
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">JavaScript</span>
+                            </div>
+                        </div>
+                        
+                        <div class="track-card bg-white p-6 rounded-xl shadow-sm">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-3">Open Source Contributor</h3>
+                            <p class="text-gray-600 mb-4">Contribute to open source projects and communities.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">GitHub</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">PRs</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">Docs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Project Flow -->
+        <section id="slide-6" class="slide bg-white">
+            <div class="blob bg-indigo-100 w-96 h-96 bottom-0 left-0"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-12 text-blue-800">Our Project Flow</h2>
+                    
+                    <div class="relative">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-gray-50 p-8 rounded-xl shadow-md relative">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 text-blue-600">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-semibold mb-4">Solo</h3>
+                                <ul class="text-gray-600 space-y-2">
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Brainstorm ideas in #project-ideas
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Complete starter challenges
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Build your skills
+                                    </li>
+                                </ul>
+                                <div class="flow-arrow hidden md:block">→</div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-8 rounded-xl shadow-md relative">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 text-blue-600">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-semibold mb-4">Collaborate</h3>
+                                <ul class="text-gray-600 space-y-2">
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Build in public in #project-updates
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Collaborate in #build-together
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Work with mentors
+                                    </li>
+                                </ul>
+                                <div class="flow-arrow hidden md:block">→</div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 text-blue-600">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-semibold mb-4">Launch</h3>
+                                <ul class="text-gray-600 space-y-2">
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Ship in #ship-it channel
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Build your portfolio
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Celebrate success
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12 bg-gray-50 p-6 rounded-xl shadow-md">
+                            <div class="flex items-center mb-4">
+                                <svg class="w-6 h-6 text-blue-600 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                <h3 class="text-lg font-semibold text-gray-800">Stay in sync with GitHub</h3>
+                            </div>
+                            <p class="text-gray-600">
+                                All project updates, pull requests, and issues are automatically shared in the <span class="text-blue-600 font-medium">#github-feeds</span> channel, keeping everyone informed about project progress.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: How to Join the Build Crew -->
+        <section id="slide-7" class="slide bg-gray-50">
+            <div class="blob bg-blue-200 w-80 h-80 top-20 left-20"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-12 text-blue-800">How to Join the Build Crew</h2>
+                    
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <div class="flex items-center mb-6">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-6 text-blue-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-semibold text-gray-800">Unlock Project Access</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                            To access project channels, complete your first starter challenge.
+                            Post your work in <span class="text-blue-600 font-medium">#submit-task</span>, and once approved, you'll get the Builder Role.
+                        </p>
+                        
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-blue-700">
+                                        The Builder Role gives you access to all project channels, collaboration opportunities, and advanced resources.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: What's Next -->
+        <section id="slide-8" class="slide bg-white">
+            <div class="blob bg-indigo-100 w-96 h-96 bottom-0 right-0"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-12 text-blue-800">What's Next?</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 text-blue-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4">Join our Launch Event</h3>
+                            <p class="text-gray-600 mb-6">
+                                Be part of our official launch and meet other members of the community. Network with like-minded developers and designers.
+                            </p>
+                            <a href="#" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                Register Now
+                            </a>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 text-blue-600">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4">Become a Founding Member</h3>
+                            <p class="text-gray-600 mb-6">
+                                Help shape the early Codemingo experience and get special recognition as one of our founding members.
+                            </p>
+                            <a href="#" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 text-center">
+                        <p class="text-xl text-gray-700 mb-6">
+                            Be part of something that grows with you. Codemingo is built by the community, for the community.
+                        </p>
+                        <a href="#" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
+                            Join the Community
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Get Started -->
+        <section id="slide-9" class="slide bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+            <div class="blob bg-blue-400 w-96 h-96 top-0 right-0 opacity-20"></div>
+            <div class="blob bg-indigo-500 w-80 h-80 bottom-0 left-0 opacity-20"></div>
+            
+            <div class="slide-content py-20">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8">Get Started</h2>
+                    
+                    <p class="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
+                        Ready to join Codemingo? Here's everything you need to begin your journey.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                        <a href="#" class="flex items-center p-6 bg-white bg-opacity-10 rounded-xl hover:bg-opacity-20 transition-all">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-semibold text-xl mb-1">Join Discord</h4>
+                                <p class="text-blue-100">Connect with our community</p>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="flex items-center p-6 bg-white bg-opacity-10 rounded-xl hover:bg-opacity-20 transition-all">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-semibold text-xl mb-1">Read Docs</h4>
+                                <p class="text-blue-100">Access resources & guides</p>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="flex items-center p-6 bg-white bg-opacity-10 rounded-xl hover:bg-opacity-20 transition-all">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-semibold text-xl mb-1">Sign Up as Tester</h4>
+                                <p class="text-blue-100">Try new features first</p>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="flex items-center p-6 bg-white bg-opacity-10 rounded-xl hover:bg-opacity-20 transition-all">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-semibold text-xl mb-1">DM Us</h4>
+                                <p class="text-blue-100">Ask questions & get help</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <a href="#" class="inline-block px-8 py-4 bg-white text-blue-700 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors shadow-lg">
+                        Start Your Journey Now
+                    </a>
+                    
+                    <p class="mt-12 text-xl text-blue-100">
+                        Codemingo isn't just a server. It's a starting point.<br>
+                        <span class="font-medium">If you're serious about building in tech — welcome home.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-dot active" data-slide="1"></div>
+        <div class="progress-dot" data-slide="2"></div>
+        <div class="progress-dot" data-slide="3"></div>
+        <div class="progress-dot" data-slide="4"></div>
+        <div class="progress-dot" data-slide="5"></div>
+        <div class="progress-dot" data-slide="6"></div>
+        <div class="progress-dot" data-slide="7"></div>
+        <div class="progress-dot" data-slide="8"></div>
+        <div class="progress-dot" data-slide="9"></div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <div class="nav-arrow prev" id="prev-slide">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
         </div>
-
-        <!-- Navigation buttons -->
-        <button class="nav-btn prev-btn" id="prev-btn">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="nav-btn next-btn" id="next-btn">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-
-        <!-- Progress bar -->
-        <div class="progress-bar" id="progress-bar"></div>
+        <div class="nav-arrow next" id="next-slide">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const slidesContainer = document.getElementById('slides-container');
             const slides = document.querySelectorAll('.slide');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const progressBar = document.getElementById('progress-bar');
-            let currentSlide = 0;
+            const progressDots = document.querySelectorAll('.progress-dot');
+            const prevButton = document.getElementById('prev-slide');
+            const nextButton = document.getElementById('next-slide');
             
-            // Create progress dots
-            for (let i = 0; i < slides.length; i++) {
-                const dot = document.createElement('div');
-                dot.classList.add('progress-dot');
-                if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(i));
-                progressBar.appendChild(dot);
-            }
+            let currentSlide = 1;
+            const totalSlides = slides.length;
             
-            // Initialize bullet points animation
-            function initBulletPoints() {
-                const activeSlide = document.querySelector('.slide.active');
-                const bullets = activeSlide.querySelectorAll('.bullet-point');
-                
-                bullets.forEach((bullet, index) => {
-                    setTimeout(() => {
-                        bullet.classList.add('visible');
-                    }, 500 + (index * 200));
-                });
-            }
-            
-            // Go to specific slide
-            function goToSlide(index) {
-                if (index < 0) index = 0;
-                if (index >= slides.length) index = slides.length - 1;
-                
-                // Reset all slides
-                slides.forEach(slide => {
-                    slide.classList.remove('active', 'prev');
-                    
-                    // Reset bullet points
-                    const bullets = slide.querySelectorAll('.bullet-point');
-                    bullets.forEach(bullet => bullet.classList.remove('visible'));
-                });
-                
-                // Set active slide
-                slides[index].classList.add('active');
-                
-                // Set previous slides
-                if (index > 0) {
-                    for (let i = 0; i < index; i++) {
-                        slides[i].classList.add('prev');
-                    }
+            // Initialize slides
+            slides.forEach((slide, index) => {
+                if (index === 0) {
+                    slide.style.display = 'block';
+                } else {
+                    slide.style.display = 'none';
                 }
+            });
+            
+            // Function to show a specific slide
+            function showSlide(slideNumber) {
+                slides.forEach((slide, index) => {
+                    const slideNum = index + 1;
+                    
+                    if (slideNum === slideNumber) {
+                        slide.style.display = 'block';
+                        
+                        // Animate elements
+                        const fadeElements = slide.querySelectorAll('.fade-in');
+                        fadeElements.forEach((el, i) => {
+                            el.style.animationDelay = `${i * 0.2}s`;
+                            el.style.opacity = '0';
+                            setTimeout(() => {
+                                el.style.opacity = '1';
+                                el.style.transform = 'translateY(0)';
+                            }, 100);
+                        });
+                    } else {
+                        slide.style.display = 'none';
+                    }
+                });
                 
                 // Update progress dots
-                const dots = progressBar.querySelectorAll('.progress-dot');
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
+                progressDots.forEach((dot, index) => {
+                    const dotNum = index + 1;
+                    if (dotNum === slideNumber) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
                 });
                 
-                currentSlide = index;
+                // Update current slide
+                currentSlide = slideNumber;
                 
-                // Animate bullet points
-                initBulletPoints();
+                // Update button states
+                prevButton.style.opacity = currentSlide === 1 ? '0.5' : '1';
+                nextButton.style.opacity = currentSlide === totalSlides ? '0.5' : '1';
             }
             
-            // Event listeners
-            prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
-            nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+            // Event listeners for navigation
+            prevButton.addEventListener('click', () => {
+                if (currentSlide > 1) {
+                    showSlide(currentSlide - 1);
+                }
+            });
+            
+            nextButton.addEventListener('click', () => {
+                if (currentSlide < totalSlides) {
+                    showSlide(currentSlide + 1);
+                }
+            });
+            
+            // Progress dot navigation
+            progressDots.forEach((dot) => {
+                dot.addEventListener('click', () => {
+                    const slideNumber = parseInt(dot.getAttribute('data-slide'));
+                    showSlide(slideNumber);
+                });
+            });
             
             // Keyboard navigation
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
-                if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+                if (e.key === 'ArrowRight' && currentSlide < totalSlides) {
+                    showSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowLeft' && currentSlide > 1) {
+                    showSlide(currentSlide - 1);
+                }
             });
             
-            // Initialize first slide
-            initBulletPoints();
-            
-            // Swipe support for mobile
-            let touchStartX = 0;
-            let touchEndX = 0;
-            
-            document.addEventListener('touchstart', e => {
-                touchStartX = e.changedTouches[0].screenX;
+            // Mouse wheel navigation (with debounce)
+            let wheelTimeout;
+            document.addEventListener('wheel', (e) => {
+                clearTimeout(wheelTimeout);
+                wheelTimeout = setTimeout(() => {
+                    if (e.deltaY > 0 && currentSlide < totalSlides) {
+                        showSlide(currentSlide + 1);
+                    } else if (e.deltaY < 0 && currentSlide > 1) {
+                        showSlide(currentSlide - 1);
+                    }
+                }, 100);
             });
             
-            document.addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].screenX;
+            // Touch navigation
+            let touchStartY = 0;
+            let touchEndY = 0;
+            
+            document.addEventListener('touchstart', (e) => {
+                touchStartY = e.changedTouches[0].screenY;
+            });
+            
+            document.addEventListener('touchend', (e) => {
+                touchEndY = e.changedTouches[0].screenY;
                 handleSwipe();
             });
             
             function handleSwipe() {
-                const threshold = 50;
-                if (touchEndX < touchStartX - threshold) {
-                    // Swipe left
-                    goToSlide(currentSlide + 1);
-                }
-                if (touchEndX > touchStartX + threshold) {
-                    // Swipe right
-                    goToSlide(currentSlide - 1);
+                const diff = touchStartY - touchEndY;
+                if (diff > 50 && currentSlide < totalSlides) {
+                    showSlide(currentSlide + 1);
+                } else if (diff < -50 && currentSlide > 1) {
+                    showSlide(currentSlide - 1);
                 }
             }
+            
+            // Initialize first slide animations
+            const firstSlideFadeElements = slides[0].querySelectorAll('.fade-in');
+            firstSlideFadeElements.forEach((el, i) => {
+                el.style.animationDelay = `${i * 0.2}s`;
+            });
         });
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9672697976f234ed',t:'MTc1Mzg1Mjg4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
